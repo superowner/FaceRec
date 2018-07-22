@@ -47,7 +47,7 @@ namespace FaceRec.Core
         {
             var start = DateTime.Now;
             var (bitmap, img, detectRectangles) = recognitor.Detect(image);
-            var recoginizeRectangles = InnerRecognize(recognitor, img, detectRectangles);
+            var recoginizeRectangles = InnerRecognize(recognitor, img, bitmap, detectRectangles);
             img.Dispose();
             var duration = (DateTime.Now - start).TotalSeconds;
             return (bitmap, detectRectangles.Length, recoginizeRectangles.Length, duration);
@@ -117,7 +117,7 @@ namespace FaceRec.Core
             return rectangles;
         }
 
-        private static DlibDotNet.Rectangle[] InnerRecognize(FaceRecognition recognitor, Array2D<RgbPixel> img, DlibDotNet.Rectangle[] rectangles)
+        private static DlibDotNet.Rectangle[] InnerRecognize(FaceRecognition recognitor, Array2D<RgbPixel> img, Bitmap bitmap, DlibDotNet.Rectangle[] rectangles)
         {
             var config = ProgramContext.Current.Config;
             var knownUsers = ProgramContext.Current.KnownUsers;
@@ -131,10 +131,25 @@ namespace FaceRec.Core
                     {
                         for (int j = 0; j < knownUsers.Length; j++)
                         {
-                            var isKnown = recognitor.FaceCompare(encodings[i], knownUsers[j].Encoding);
+                            var user = knownUsers[j];
+                            var isKnown = recognitor.FaceCompare(encodings[i], user.Encoding);
                             if (isKnown)
                             {
                                 rects.Add(rectangles[i]);
+                                using (var g = Graphics.FromImage(bitmap))
+                                {
+                                    using (Pen pen = new Pen(Color.Red))
+                                    {
+                                        var labelRectangle = new System.Drawing.Rectangle(rectangles[i].Left, rectangles[i].Bottom, (int)rectangles[i].Width, 25);
+                                        g.DrawRectangle(pen, labelRectangle);
+
+                                        using (var brush = new SolidBrush(Color.Red))
+                                        {
+                                            g.DrawString(string.Format("{0}/{1}", user.Name, user.GroupName), new Font("黑体", 14), brush, new PointF(labelRectangle.Left + 5, labelRectangle.Top + 5));
+                                        }
+                                    }
+                                }
+
                                 break;
                             }
                         }

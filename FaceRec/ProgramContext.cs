@@ -15,7 +15,7 @@ namespace FaceRec
         public static ProgramContext Current = new ProgramContext();
 
         public AppConfig Config;
-        public User[] KnownUsers;
+        public UserView[] KnownUsers;
         public FaceRecognition Recognitor;
         public const string RecognitionModelFile = "data\\models\\dlib_face_recognition_resnet_model_v1.dat";
         public const string CnnDetectorModelFile = "data\\models\\mmod_human_face_detector.dat";
@@ -49,18 +49,18 @@ namespace FaceRec
 
         public static void InitializeKnowUsers(Store store)
         {
-            var users = store.Users.ToArray();
+            var userViews = store.UserViews.ToArray();
             var faceEncodings = store.FaceEncodings.ToArray();
-            foreach (var user in users)
+            foreach (var userView in userViews)
             {
-                var userFaceEncodings = faceEncodings.Where(fe => fe.UserId == user.Id).ToArray();
-                user.Encoding = new Matrix<double>(128, 150);
+                var userFaceEncodings = faceEncodings.Where(fe => fe.UserId == userView.Id).ToArray();
+                userView.Encoding = new Matrix<double>(128, 150);
                 foreach (var faceEncoding in userFaceEncodings)
                 {
-                    user.Encoding[faceEncoding.Row, faceEncoding.Column] = faceEncoding.Value;
+                    userView.Encoding[faceEncoding.Row, faceEncoding.Column] = faceEncoding.Value;
                 }
             }
-            Current.KnownUsers = users;
+            Current.KnownUsers = userViews;
         }
     }
 }
