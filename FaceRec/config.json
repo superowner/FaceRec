@@ -1,4 +1,8 @@
 ﻿{
   "ImageSampleSize": 614400,
-  "Tolerance":  0.6
+  "DrawRectangle": true,
+  "UpSampleTimes": 0,
+  "Tolerance": 0.6,
+  "EnableRealTimeRecoginition": true,
+  "EnableGPUAcceleration": false
 }

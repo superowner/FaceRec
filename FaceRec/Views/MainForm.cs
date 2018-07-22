@@ -14,175 +14,39 @@ using OpenCvSharp;
 using OpenCvSharp.Extensions;
 using DlibDotNet;
 using FaceRec.Models;
+using DlibDotNet.Tools;
 
 namespace FaceRec.Views
 {
     public partial class MainForm : Form
     {
-        //private bool isRunning;
-
         public MainForm()
         {
             InitializeComponent();
-
-            Program.Current.DetectSuccess += Current_DetectSuccess;
-        }
-
-        private void Current_DetectSuccess(object sender, DetectSuccessEventArgs e)
-        {           
-            this.UpdateStatusAsync($"检测{e.Rectangles.Length}个,耗时{Math.Round(e.Duration, 3)}");
-            this.UpdatePicutureBoxAsync(e.Image);
         }
 
         private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
         {
-            Program.Exit();
+            Application.Exit();
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Program.Exit();
+            Application.Exit();
         }
 
-        private void stopToolStripMenuItem_Click(object sender, EventArgs e)
+        private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.UpdateUIOnStop();
-        }
-
-        private void UpdateStatusAsync(string text)
-        {
-            MethodInvoker updateStatus = () =>
-            {
-                if (!this.IsDisposed)
-                {
-                    this.speedToolStripStatusLabel.Text = text;
-                }
-            };
-            if (!this.IsDisposed)
-            {
-                this.BeginInvoke(updateStatus);
-            }
-            Application.DoEvents();
-        }
-
-        private void UpdatePicutureBoxAsync(Bitmap bitmap)
-        {
-            MethodInvoker updateImage = () =>
-            {
-                if (!this.IsDisposed)
-                {
-                    this.mainPictureBox.Image = bitmap;
-                }
-            };
-            if (!this.IsDisposed)
-            {
-                this.BeginInvoke(updateImage);
-            }
-            Application.DoEvents();
-        }
-
-        private void UpdateUIOnStart()
-        {
-            MethodInvoker updateImage = () =>
-            {
-                if (!this.IsDisposed)
-                {
-                    this.startToolStripMenuItem.Enabled = false;
-                    this.stopToolStripMenuItem.Enabled = true;
-                    Program.Current.isRunning = true;
-                    this.speedToolStripStatusLabel.Text = "检测中...";
-                }
-            };
-            if (!this.IsDisposed)
-            {
-                this.BeginInvoke(updateImage);
-            }
-            Application.DoEvents();
-        }
-
-        private void UpdateUIOnStop()
-        {
-            MethodInvoker updateImage = () =>
-            {
-                if (!this.IsDisposed)
-                {
-                    this.startToolStripMenuItem.Enabled = true;
-                    this.stopToolStripMenuItem.Enabled = false;
-                    Program.Current.isRunning = false;
-                    this.speedToolStripStatusLabel.Text = "";
-                    this.mainPictureBox.Image = null;
-                }
-            };
-            if (!this.IsDisposed)
-            {
-                this.BeginInvoke(updateImage);
-            }
-            Application.DoEvents();
-        }
-
-        private void startToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Action start = () =>
-            {
-                this.UpdateUIOnStart();
-                using (var videoCapture = VideoCapture.FromCamera(0))
-                {
-                    Program.GetFaceLocationsFromVideo(videoCapture);
-                }
-            };
-
-            if (Program.Current.isRunning)
-            {
-                var result = MessageBox.Show("使用摄像头识别将停止进行中的其他识别", "提示", MessageBoxButtons.YesNo);
-                if (result == DialogResult.Yes)
-                {
-                    this.UpdateUIOnStop();
-                    Thread.Sleep(100);
-                    Application.DoEvents();
-
-                    start();
-                }
-            }
-            else
-            {
-                start();
-            }
-        }
-
-        private void systemOptionsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            var systemOptionForm = new SystemOptionsForm();
+            var systemOptionForm = new OptionsForm();
             systemOptionForm.ShowDialog();
         }
 
         private string GetFileName(string recognitionMode = "图片")
         {
-            Func<string> getFileName = () =>
+            var result = this.openFileDialog.ShowDialog();
+            if (result == DialogResult.OK)
             {
-                var openFileResult = this.openFileDialog.ShowDialog();
-                if (openFileResult == DialogResult.OK)
-                {
-                    return this.openFileDialog.FileName;
-                }
-
-                return string.Empty;
-            };
-
-            if (Program.Current.isRunning)
-            {
-                var result = MessageBox.Show($"使用{recognitionMode}识别将停止进行中的其他识别", "提示", MessageBoxButtons.YesNo);
-                if (result == DialogResult.Yes)
-                {
-                    this.UpdateUIOnStop();
-                    Thread.Sleep(100);
-                    Application.DoEvents();
-
-                    return getFileName();
-                }
-            }
-            else
-            {
-                return getFileName();
+                return this.openFileDialog.FileName;
             }
 
             return string.Empty;
@@ -196,14 +60,11 @@ namespace FaceRec.Views
             var fileName = this.GetFileName();
             if (fileName != string.Empty)
             {
-                using (var image = Cv2.ImRead(fileName))
-                {
-                    this.mainPictureBox.SizeMode = PictureBoxSizeMode.AutoSize;
-                    this.mainPictureBox.Dock = DockStyle.None;
-                    //this.UpdateUIOnStart();
-                    this.UpdateStatusAsync("检测中...");
-                    Program.GetFaceLocationsFromMat(image);
-                }
+                var pictureForm = new PictureForm();
+                pictureForm.MdiParent = this;
+                pictureForm.FileName = fileName;
+                pictureForm.Show();
+                pictureForm.WindowState = FormWindowState.Maximized;
             }
         }
 
@@ -215,14 +76,92 @@ namespace FaceRec.Views
             var fileName = this.GetFileName("视频");
             if (fileName != string.Empty)
             {
-                using (var videoCapture = VideoCapture.FromFile(fileName))
-                {
-                    this.mainPictureBox.SizeMode = PictureBoxSizeMode.Normal;
-                    this.mainPictureBox.Dock = DockStyle.Fill;
-                    this.UpdateUIOnStart();
-                    Program.GetFaceLocationsFromVideo(videoCapture);
-                }
+                var videoForm = new VideoForm();
+                videoForm.MdiParent = this;
+                videoForm.FileName = fileName;
+                videoForm.Show();
+                videoForm.WindowState = FormWindowState.Maximized;
             }
+        }
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+            new Thread(() =>
+            {
+                this.UpdateStatusAsync("正在初始化...");
+                try
+                {
+                    ProgramContext.Initialize();
+                }
+                catch (Exception error)
+                {
+                    this.ShowMessagesAsync(error.Message, "初始化异常");
+                }
+                this.UpdateStatusAsync("初始化完成");
+                this.UpdateRecognitionMenuItemsAsync(true);
+            }).Start();
+        }
+
+        private void ShowMessagesAsync(string text, string caption)
+        {
+            MethodInvoker updateImage = () =>
+            {
+                if (!this.IsDisposed)
+                {
+                    MessageBox.Show(text, "初始化异常");
+                }
+            };
+            if (!this.IsDisposed)
+            {
+                this.BeginInvoke(updateImage);
+            }
+        }
+
+        public void UpdateStatusAsync(string text)
+        {
+            MethodInvoker updateImage = () =>
+            {
+                if (!this.IsDisposed)
+                {
+                    this.toolStripStatusLabel.Text = text;
+                }
+            };
+            if (!this.IsDisposed)
+            {
+                this.BeginInvoke(updateImage);
+            }
+        }
+
+        private void UpdateRecognitionMenuItemsAsync(bool enable)
+        {
+            MethodInvoker updateImage = () =>
+            {
+                if (!this.IsDisposed)
+                {
+                    this.cameraRecognitionToolStripMenuItem.Enabled = enable;
+                    this.videoRecognitionToolStripMenuItem.Enabled = enable;
+                    this.pictureRecognitionToolStripMenuItem.Enabled = enable;
+                    this.userToolStripMenuItem.Enabled = enable;
+                }
+            };
+            if (!this.IsDisposed)
+            {
+                this.BeginInvoke(updateImage);
+            }
+        }
+
+        private void cameraRecognitionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var cameraForm = new CameraForm();
+            cameraForm.MdiParent = this;
+            cameraForm.Show();
+            cameraForm.WindowState = FormWindowState.Maximized;
+        }
+
+        private void userToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var userForm = new UserForm();
+            userForm.ShowDialog();
         }
     }
 }
