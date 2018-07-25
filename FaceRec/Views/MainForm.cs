@@ -92,13 +92,14 @@ namespace FaceRec.Views
                 try
                 {
                     ProgramContext.Initialize();
+
+                    this.UpdateStatusAsync("初始化完成");
+                    this.UpdateRecognitionMenuItemsAsync(true);
                 }
                 catch (Exception error)
                 {
                     this.ShowMessagesAsync(error.Message, "初始化异常");
                 }
-                this.UpdateStatusAsync("初始化完成");
-                this.UpdateRecognitionMenuItemsAsync(true);
             }).Start();
         }
 

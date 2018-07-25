@@ -126,13 +126,13 @@ namespace FaceRec.Core
             {
                 if (config.EnableRealTimeRecoginition)
                 {
-                    var encodings = recognitor.FaceEncodings(img, rectangles);
-                    for (int i = 0; i < encodings.Length; i++)
+                    var faceEncodings = recognitor.FaceEncodings(img, rectangles);
+                    for (int i = 0; i < faceEncodings.Length; i++)
                     {
                         for (int j = 0; j < knownUsers.Length; j++)
                         {
                             var user = knownUsers[j];
-                            var isKnown = recognitor.FaceCompare(encodings[i], user.Encoding);
+                            var isKnown = recognitor.FaceCompare(faceEncodings[i], user.FaceEncoding);
                             if (isKnown)
                             {
                                 rects.Add(rectangles[i]);
@@ -153,7 +153,7 @@ namespace FaceRec.Core
                                 break;
                             }
                         }
-                        encodings[i].Dispose();
+                        faceEncodings[i].Dispose();
                     }
                 }
                 else

@@ -1,12 +1,16 @@
-﻿using DlibDotNet;
-using DlibDotNet.Tools;
-using FaceRec.Core;
-using FaceRec.Models;
+﻿
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
+using FaceRec.Core;
+using DlibDotNet;
+using DlibDotNet.Tools;
+using FaceRec.Models;
+using System.IO.Compression;
+using System.IO;
 
 namespace FaceRec
 {
@@ -39,6 +43,17 @@ namespace FaceRec
                 var recognitor = Current.Recognitor;
                 //var knowFace = Dlib.LoadJpeg<RgbPixel>(@"D:\projects\FaceRec\FaceRec\2.jpg");
                 //var knowFaceEncodings = recognitor.FaceEncodings(knowFace, recognitor.FaceLocations(knowFace));
+                //var a = knowFaceEncodings[0].ToBytes();
+                //var b = a.FromBytes();
+
+                //var inputStream = new MemoryStream(a);
+                //var outputStream = new MemoryStream();
+                //using (GZipStream compressionStream = new GZipStream(outputStream, CompressionMode.Compress))
+                //{
+                //    inputStream.CopyTo(compressionStream);
+                //}
+                //var c = outputStream.ToArray();
+
                 //Current.KnownUsers = knowFaceEncodings;
             }
             catch (Exception e)
@@ -50,15 +65,15 @@ namespace FaceRec
         public static void InitializeKnowUsers(Store store)
         {
             var userViews = store.UserViews.ToArray();
-            var faceEncodings = store.FaceEncodings.ToArray();
             foreach (var userView in userViews)
             {
-                var userFaceEncodings = faceEncodings.Where(fe => fe.UserId == userView.Id).ToArray();
-                userView.Encoding = new Matrix<double>(128, 150);
-                foreach (var faceEncoding in userFaceEncodings)
+                var inputStream = new MemoryStream(userView.Encoding);
+                var outputStream = new MemoryStream();
+                using (GZipStream decompressionStream = new GZipStream(inputStream, CompressionMode.Decompress))
                 {
-                    userView.Encoding[faceEncoding.Row, faceEncoding.Column] = faceEncoding.Value;
+                    decompressionStream.CopyTo(outputStream);
                 }
+                userView.Encoding = outputStream.ToArray();
             }
             Current.KnownUsers = userViews;
         }

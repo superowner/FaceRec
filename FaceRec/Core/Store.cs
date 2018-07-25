@@ -42,7 +42,5 @@ namespace FaceRec.Core
         public virtual DbSet<User> Users { get; set; }
 
         public virtual DbSet<UserView> UserViews { get; set; }
-
-        public virtual DbSet<FaceEncoding> FaceEncodings { get; set; }
     }
 }

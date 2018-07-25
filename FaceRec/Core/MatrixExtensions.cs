@@ -12,37 +12,37 @@ namespace FaceRec.Core
     {
         public const int Rows = 128;
         public const int Columns = 150;
+        public const int BytesOfFloat = 4;
 
-        //public static T[] ToBytes<T>(this Matrix<T> matrix)
-        //    where T : struct
-        //{
-        //    var output = new T[matrix.Size];
+        public static byte[] ToBytes(this Matrix<float> matrix)
+        {
 
-        //    for (int i = 0; i < matrix.Rows; i++)
-        //    {
-        //        for (int j = 0; j < matrix.Columns; j++)
-        //        {
-        //            output[i * matrix.Rows + j] = matrix[i, j];
-        //        }
-        //    }
+            var output = new byte[matrix.Size * BytesOfFloat];
 
-        //    return output;
-        //}
+            for (int i = 0; i < matrix.Rows; i++)
+            {
+                for (int j = 0; j < matrix.Columns; j++)
+                {
+                    var bytes = BitConverter.GetBytes(matrix[i, j]);
+                    Array.Copy(bytes, 0, output, (i * matrix.Rows + j) * BytesOfFloat, BytesOfFloat);
+                }
+            }
 
-        //public static Matrix<double> ToMatrix(this FaceEncoding[] faceEncodings)
-        //{
-        //    var matrix = new Matrix<double>(Rows, Columns);
-        //    for (int i = 0; i < Rows; i++)
-        //    {
-        //        for (int j = 0; j < Columns; j++)
-        //        {
-        //            matrix[i,j]
-        //        }
-        //    }
-        //    foreach (var faceEncoding in userFaceEncodings)
-        //    {
-        //        user.Encoding[faceEncoding.Row, faceEncoding.Row] = faceEncoding.Value;
-        //    }
-        //}
+            return output;
+        }
+
+        public static Matrix<float> FromBytes(this byte[] bytes)
+        {
+            var matrix = new Matrix<float>(Rows, Columns);
+            for (int i = 0; i < Rows; i++)
+            {
+                for (int j = 0; j < Columns; j++)
+                {
+                    matrix[i, j] = BitConverter.ToSingle(bytes, (i * matrix.Rows + j) * BytesOfFloat);
+                }
+            }
+
+            return matrix;
+        }
     }
 }

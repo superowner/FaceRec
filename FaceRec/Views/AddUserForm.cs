@@ -8,6 +8,8 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,7 +19,7 @@ namespace FaceRec.Views
 {
     public partial class AddUserForm : Form
     {
-        private Matrix<double> faceEncoding;
+        private Matrix<float> faceEncoding;
 
         public AddUserForm()
         {
@@ -98,34 +100,22 @@ namespace FaceRec.Views
                         var user = store.Users.FirstOrDefault(u => u.Name == name);
                         if (user == null)
                         {
+                            var originEncoding = this.faceEncoding.ToBytes();
+                            var inputStream = new MemoryStream(originEncoding);
+                            var outputStream = new MemoryStream();
+                            using (GZipStream compressionStream = new GZipStream(outputStream, CompressionMode.Compress))
+                            {
+                                inputStream.CopyTo(compressionStream);
+                            }
+
                             user = new User();
                             user.Id = Guid.NewGuid().ToString();
                             user.Name = name;
                             user.GroupId = group.Id;
                             user.Face = image.ToBytes(ImageFormat.Jpeg); // less size
-                            //FaceEncodeing = new List<float>(this.faceEncoding.ToBytes<float>());
+                            user.Encoding = outputStream.ToArray();                            
                             user.Comment = comment;
                             store.Users.Add(user);
-
-                            var encodings = new List<FaceEncoding>();
-                            for (int i = 0; i < this.faceEncoding.Rows; i++)
-                            {
-                                for (int j = 0; j < this.faceEncoding.Columns; j++)
-                                {
-                                    var value = this.faceEncoding[i, j];
-                                    if (value != 0 && !double.IsNaN(value))
-                                    {
-                                        var encoding = new FaceEncoding();
-                                        encoding.Id = Guid.NewGuid().ToString();
-                                        encoding.Row = i;
-                                        encoding.Column = j;
-                                        encoding.Value = value;
-                                        encoding.UserId = user.Id;                                        
-                                        encodings.Add(encoding);
-                                    }
-                                }
-                            }
-                            store.FaceEncodings.AddRange(encodings);
 
                             store.SaveChanges();
                             this.faceEncoding.Dispose();

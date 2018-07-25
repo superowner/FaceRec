@@ -119,7 +119,6 @@
     <Compile Include="Core\Store.cs" />
     <Compile Include="Models\Account.cs" />
     <Compile Include="Models\DetectSuccessEventArgs.cs" />
-    <Compile Include="Models\FaceEncoding.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\UserGroup.cs" />
     <Compile Include="Models\UserView.cs" />
