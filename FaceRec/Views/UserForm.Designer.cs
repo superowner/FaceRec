@@ -28,17 +28,20 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.panel1 = new System.Windows.Forms.Panel();
             this.btnAddUser = new System.Windows.Forms.Button();
             this.btnAddGroup = new System.Windows.Forms.Button();
             this.dgvUsers = new System.Windows.Forms.DataGridView();
-            this.selectColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.rowContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.removeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.faceEncodingColumn = new System.Windows.Forms.DataGridViewImageColumn();
             this.nameColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.groupColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.commentColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvUsers)).BeginInit();
+            this.rowContextMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
@@ -75,9 +78,7 @@
             // dgvUsers
             // 
             this.dgvUsers.AllowUserToAddRows = false;
-            this.dgvUsers.AllowUserToDeleteRows = false;
             this.dgvUsers.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.selectColumn,
             this.faceEncodingColumn,
             this.nameColumn,
             this.groupColumn,
@@ -89,19 +90,28 @@
             this.dgvUsers.RowTemplate.Height = 300;
             this.dgvUsers.Size = new System.Drawing.Size(1092, 448);
             this.dgvUsers.TabIndex = 1;
+            this.dgvUsers.CellMouseUp += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dgvUsers_CellMouseUp);
             // 
-            // selectColumn
+            // rowContextMenuStrip
             // 
-            this.selectColumn.HeaderText = "选择";
-            this.selectColumn.Name = "selectColumn";
-            this.selectColumn.ReadOnly = true;
+            this.rowContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.removeToolStripMenuItem});
+            this.rowContextMenuStrip.Name = "rowContextMenuStrip";
+            this.rowContextMenuStrip.Size = new System.Drawing.Size(101, 26);
+            // 
+            // removeToolStripMenuItem
+            // 
+            this.removeToolStripMenuItem.Name = "removeToolStripMenuItem";
+            this.removeToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
+            this.removeToolStripMenuItem.Text = "删除";
+            this.removeToolStripMenuItem.Click += new System.EventHandler(this.removeToolStripMenuItem_Click);
             // 
             // faceEncodingColumn
             // 
             this.faceEncodingColumn.DataPropertyName = "Face";
             this.faceEncodingColumn.HeaderText = "脸部";
             this.faceEncodingColumn.ImageLayout = System.Windows.Forms.DataGridViewImageCellLayout.Zoom;
-            this.faceEncodingColumn.MinimumWidth = 300;
+            this.faceEncodingColumn.MinimumWidth = 200;
             this.faceEncodingColumn.Name = "faceEncodingColumn";
             this.faceEncodingColumn.ReadOnly = true;
             this.faceEncodingColumn.Resizable = System.Windows.Forms.DataGridViewTriState.True;
@@ -143,6 +153,7 @@
             this.Load += new System.EventHandler(this.UserForm_Load);
             this.panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvUsers)).EndInit();
+            this.rowContextMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -153,7 +164,8 @@
         private System.Windows.Forms.Button btnAddUser;
         private System.Windows.Forms.Button btnAddGroup;
         private System.Windows.Forms.DataGridView dgvUsers;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn selectColumn;
+        private System.Windows.Forms.ContextMenuStrip rowContextMenuStrip;
+        private System.Windows.Forms.ToolStripMenuItem removeToolStripMenuItem;
         private System.Windows.Forms.DataGridViewImageColumn faceEncodingColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn nameColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn groupColumn;
