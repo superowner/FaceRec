@@ -122,44 +122,46 @@ namespace FaceRec.Core
             var config = ProgramContext.Current.Config;
             var knownUsers = ProgramContext.Current.KnownUsers;
             var rects = new List<DlibDotNet.Rectangle>();
-            if (rectangles.Length > 0)
+            if (rectangles.Length == 0)
             {
-                if (config.EnableRealTimeRecoginition)
-                {
-                    var faceEncodings = recognitor.FaceEncodings(img, rectangles);
-                    for (int i = 0; i < faceEncodings.Length; i++)
-                    {
-                        for (int j = 0; j < knownUsers.Length; j++)
-                        {
-                            var user = knownUsers[j];
-                            var isKnown = recognitor.FaceCompare(faceEncodings[i], user.FaceEncoding);
-                            if (isKnown)
-                            {
-                                rects.Add(rectangles[i]);
-                                using (var g = Graphics.FromImage(bitmap))
-                                {
-                                    using (Pen pen = new Pen(Color.Red))
-                                    {
-                                        var labelRectangle = new System.Drawing.Rectangle(rectangles[i].Left, rectangles[i].Bottom, (int)rectangles[i].Width, 25);
-                                        g.DrawRectangle(pen, labelRectangle);
+                return rects.ToArray();
+            }
 
-                                        using (var brush = new SolidBrush(Color.Red))
-                                        {
-                                            g.DrawString(string.Format("{0}/{1}", user.Name, user.GroupName), new Font("黑体", 14), brush, new PointF(labelRectangle.Left + 5, labelRectangle.Top + 5));
-                                        }
+            if (config.EnableRealTimeRecoginition)
+            {
+                var faceEncodings = recognitor.FaceEncodings(img, rectangles);
+                for (int i = 0; i < faceEncodings.Length; i++)
+                {
+                    for (int j = 0; j < knownUsers.Length; j++)
+                    {
+                        var userView = knownUsers[j];
+                        var isKnown = recognitor.FaceCompare(faceEncodings[i], userView.FaceEncoding, 0.5f);
+                        if (isKnown)
+                        {
+                            rects.Add(rectangles[i]);
+                            using (var g = Graphics.FromImage(bitmap))
+                            { 
+                                using (Pen pen = new Pen(Color.Red))
+                                {
+                                    var labelRectangle = new System.Drawing.Rectangle(rectangles[i].Left, rectangles[i].Bottom, (int)rectangles[i].Width, 25);
+                                    g.DrawRectangle(pen, labelRectangle);
+
+                                    using (var brush = new SolidBrush(Color.Red))
+                                    {
+                                        g.DrawString(string.Format("{0}/{1}", userView.Name, userView.GroupName), new Font("黑体", 14), brush, new PointF(labelRectangle.Left + 5, labelRectangle.Top + 5));
                                     }
                                 }
-
-                                break;
                             }
-                        }
-                        faceEncodings[i].Dispose();
-                    }
-                }
-                else
-                {
 
+                            break;
+                        }
+                    }
+                    faceEncodings[i].Dispose();
                 }
+            }
+            else
+            {
+
             }
 
             return rects.ToArray();

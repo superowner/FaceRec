@@ -64,7 +64,16 @@ namespace FaceRec.Views
             {
                 var config = ProgramContext.Current.Config;
                 var recognitor = ProgramContext.Current.Recognitor;
-                var img = Dlib.LoadImage<RgbPixel>(this.openFileDialog.FileName);
+                Array2D<RgbPixel> img;
+                try
+                {
+                    img = Dlib.LoadImage<RgbPixel>(this.openFileDialog.FileName);
+                }catch (Exception error)
+                {
+                    MessageBox.Show($"加载图片失败。\r\n{error.Message}", " 错误");
+                    return;
+                }
+
                 var rects = recognitor.FaceLocations(img, config.UpSampleTimes, config.EnableGPUAcceleration ? "cnn" : "hog");
                 if (rects.Length != 1)
                 {
