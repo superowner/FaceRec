@@ -64,18 +64,30 @@ namespace FaceRec.Views
             {
                 var config = ProgramContext.Current.Config;
                 var recognitor = ProgramContext.Current.Recognitor;
+                var fileName = this.openFileDialog.FileName;
                 Array2D<RgbPixel> img;
                 try
                 {
-                    img = Dlib.LoadImage<RgbPixel>(this.openFileDialog.FileName);
-                }catch (Exception error)
+                    this.Cursor = Cursors.WaitCursor;
+                    img = Dlib.LoadImage<RgbPixel>(fileName.EnsureNonChineseCharsFileName());
+                    this.Cursor = Cursors.Default;
+                }
+                catch (Exception error)
                 {
+                    this.Cursor = Cursors.Default;
                     MessageBox.Show($"加载图片失败。\r\n{error.Message}", " 错误");
                     return;
                 }
 
+                this.Cursor = Cursors.WaitCursor;
                 var rects = recognitor.FaceLocations(img, config.UpSampleTimes, config.EnableGPUAcceleration ? "cnn" : "hog");
-                if (rects.Length != 1)
+                this.Cursor = Cursors.Default;
+                if (rects.Length == 0)
+                {
+                    MessageBox.Show("检测人脸失败，可能图片中人脸太小", "提示");
+                    return;
+                }
+                if (rects.Length > 1)
                 {
                     MessageBox.Show("检测失败，请选择有并且只有一张人脸的照片", "提示");
                     return;
@@ -90,7 +102,7 @@ namespace FaceRec.Views
                 {
                     g.DrawImage(image, new System.Drawing.Rectangle(0, 0, faceImage.Width, faceImage.Height), rect, GraphicsUnit.Pixel);
                     this.picFace.Image = faceImage;
-                }                
+                }
             }
         }
 
@@ -122,7 +134,7 @@ namespace FaceRec.Views
                             user.Name = name;
                             user.GroupId = group.Id;
                             user.Face = image.ToBytes(ImageFormat.Jpeg); // less size
-                            user.Encoding = outputStream.ToArray();                            
+                            user.Encoding = outputStream.ToArray();
                             user.Comment = comment;
                             store.Users.Add(user);
 

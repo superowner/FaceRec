@@ -15,6 +15,7 @@ using OpenCvSharp.Extensions;
 using DlibDotNet;
 using FaceRec.Models;
 using DlibDotNet.Tools;
+using FaceRec.Core;
 
 namespace FaceRec.Views
 {
@@ -62,7 +63,7 @@ namespace FaceRec.Views
             {
                 var pictureForm = new PictureForm();
                 pictureForm.MdiParent = this;
-                pictureForm.FileName = fileName;
+                pictureForm.FileName = fileName.EnsureNonChineseCharsFileName();
                 pictureForm.Show();
                 pictureForm.WindowState = FormWindowState.Maximized;
             }

@@ -116,6 +116,7 @@
     <Compile Include="Core\FaceRecognitionExtensions.cs" />
     <Compile Include="Core\ImageExtensions.cs" />
     <Compile Include="Core\MatrixExtensions.cs" />
+    <Compile Include="Core\PathExtensions.cs" />
     <Compile Include="Core\Store.cs" />
     <Compile Include="Models\Account.cs" />
     <Compile Include="Models\DetectSuccessEventArgs.cs" />
