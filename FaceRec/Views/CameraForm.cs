@@ -71,19 +71,26 @@ namespace FaceRec.Views
                         {
                             var start = DateTime.Now;
                             Application.DoEvents();
-                            videoCapture.Read(image); // same as cvQueryFrame                            
-                            var (bitmap, detectionCount, recognitionCount, duration) = recognitor.Recognize(image.ToArray2D<RgbPixel>());
-                            string text;
-                            if (ProgramContext.Current.Config.EnableRealTimeRecoginition)
+                            try
                             {
-                                text = string.Format("检测到{0}个,识别成功{1}个，耗时{2:0.00}秒", detectionCount, recognitionCount, duration);
+                                videoCapture.Read(image); // same as cvQueryFrame                            
+                                var (bitmap, detectionCount, recognitionCount, duration) = recognitor.Recognize(image.ToArray2D<RgbPixel>());
+                                string text;
+                                if (ProgramContext.Current.Config.EnableRealTimeRecoginition)
+                                {
+                                    text = string.Format("检测到{0}个,识别成功{1}个，耗时{2:0.00}秒", detectionCount, recognitionCount, duration);
+                                }
+                                else
+                                {
+                                    text = string.Format("检测到{0}个，耗时{1:0.00}秒", detectionCount, duration);
+                                }
+                                mainForm.UpdateStatusAsync(text);
+                                this.UpdatePicutureBoxAsync(bitmap);
                             }
-                            else
+                            catch (Exception)
                             {
-                                text = string.Format("检测到{0}个，耗时{1:0.00}秒", detectionCount, duration);
+
                             }
-                            mainForm.UpdateStatusAsync(text);
-                            this.UpdatePicutureBoxAsync(bitmap);
                         }
                     }
                 }

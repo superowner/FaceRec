@@ -30,8 +30,6 @@
         {
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.checkBox4 = new System.Windows.Forms.CheckBox();
-            this.checkBox3 = new System.Windows.Forms.CheckBox();
             this.label13 = new System.Windows.Forms.Label();
             this.chkEnableRealTimeRecoginition = new System.Windows.Forms.CheckBox();
             this.numericUpSampleTimes = new System.Windows.Forms.NumericUpDown();
@@ -91,8 +89,6 @@
             // 
             // tabPage1
             // 
-            this.tabPage1.Controls.Add(this.checkBox4);
-            this.tabPage1.Controls.Add(this.checkBox3);
             this.tabPage1.Controls.Add(this.label13);
             this.tabPage1.Controls.Add(this.chkEnableRealTimeRecoginition);
             this.tabPage1.Controls.Add(this.numericUpSampleTimes);
@@ -114,26 +110,6 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "一般";
             this.tabPage1.UseVisualStyleBackColor = true;
-            // 
-            // checkBox4
-            // 
-            this.checkBox4.AutoSize = true;
-            this.checkBox4.Location = new System.Drawing.Point(245, 189);
-            this.checkBox4.Name = "checkBox4";
-            this.checkBox4.Size = new System.Drawing.Size(48, 16);
-            this.checkBox4.TabIndex = 46;
-            this.checkBox4.Text = "微笑";
-            this.checkBox4.UseVisualStyleBackColor = true;
-            // 
-            // checkBox3
-            // 
-            this.checkBox3.AutoSize = true;
-            this.checkBox3.Location = new System.Drawing.Point(172, 189);
-            this.checkBox3.Name = "checkBox3";
-            this.checkBox3.Size = new System.Drawing.Size(48, 16);
-            this.checkBox3.TabIndex = 45;
-            this.checkBox3.Text = "张嘴";
-            this.checkBox3.UseVisualStyleBackColor = true;
             // 
             // label13
             // 
@@ -245,9 +221,8 @@
             this.chkEnableMovementDetection.Enabled = false;
             this.chkEnableMovementDetection.Location = new System.Drawing.Point(94, 190);
             this.chkEnableMovementDetection.Name = "chkEnableMovementDetection";
-            this.chkEnableMovementDetection.Size = new System.Drawing.Size(60, 16);
+            this.chkEnableMovementDetection.Size = new System.Drawing.Size(15, 14);
             this.chkEnableMovementDetection.TabIndex = 37;
-            this.chkEnableMovementDetection.Text = "眨眼睛";
             this.chkEnableMovementDetection.UseVisualStyleBackColor = true;
             // 
             // label3
@@ -552,7 +527,5 @@
         private System.Windows.Forms.CheckBox chkDrawRectangle;
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.CheckBox chkEnableRealTimeRecoginition;
-        private System.Windows.Forms.CheckBox checkBox4;
-        private System.Windows.Forms.CheckBox checkBox3;
     }
 }

@@ -158,6 +158,11 @@ namespace FaceRec.Views
             cameraForm.MdiParent = this;
             cameraForm.Show();
             cameraForm.WindowState = FormWindowState.Maximized;
+            this.cameraRecognitionToolStripMenuItem.Enabled = false;
+            cameraForm.FormClosed += (object sender2, FormClosedEventArgs e2) =>
+            {
+                this.cameraRecognitionToolStripMenuItem.Enabled = true;
+            };
         }
 
         private void userToolStripMenuItem_Click(object sender, EventArgs e)

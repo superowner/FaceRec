@@ -17,6 +17,8 @@ namespace FaceRec.Core
         public const string HOG = "hog";
         public const string CNN = "cnn";
 
+        private static readonly Font heitiFont = new Font("黑体", 14);
+
         public static Array2D<T> ToArray2D<T>(this Mat image)
             where T : struct
         {
@@ -34,12 +36,11 @@ namespace FaceRec.Core
             if (detectRectangles.Length > 0 && config.DrawRectangle)
             {
                 var rects = detectRectangles.ToSystemRectangles();
+
                 using (var g = Graphics.FromImage(bitmap))
+                using (Pen pen = new Pen(Color.Red))
                 {
-                    using (Pen pen = new Pen(Color.Red))
-                    {
-                        g.DrawRectangles(pen, rects);
-                    }
+                    g.DrawRectangles(pen, rects);
                 }
 
                 if (config.EnableRealTimeRecoginition)
@@ -52,25 +53,23 @@ namespace FaceRec.Core
                         {
                             var userView = knownUsers[j];
                             var isKnown = recognitor.FaceCompare(faceEncodings[i], userView.FaceEncoding, config.Tolerance);
-                            if (isKnown)
+                            if (!isKnown)
                             {
-                                recoginizeRectangles.Add(detectRectangles[i]);
-                                using (var g = Graphics.FromImage(bitmap))
-                                {
-                                    using (Pen pen = new Pen(Color.Red))
-                                    {
-                                        var labelRectangle = new System.Drawing.Rectangle(detectRectangles[i].Left, detectRectangles[i].Bottom, (int)detectRectangles[i].Width, 25);
-                                        g.DrawRectangle(pen, labelRectangle);
-
-                                        using (var brush = new SolidBrush(Color.Red))
-                                        {
-                                            g.DrawString(string.Format("{0}/{1}", userView.Name, userView.GroupName), new Font("黑体", 14), brush, new PointF(labelRectangle.Left + 5, labelRectangle.Top + 5));
-                                        }
-                                    }
-                                }
-
-                                break;
+                                continue;
                             }
+
+                            recoginizeRectangles.Add(detectRectangles[i]);
+
+                            using (var g = Graphics.FromImage(bitmap))
+                            using (Pen pen = new Pen(Color.Red))
+                            using (var brush = new SolidBrush(Color.Red))
+                            {
+                                var labelRectangle = new System.Drawing.Rectangle(detectRectangles[i].Left, detectRectangles[i].Bottom, (int)detectRectangles[i].Width, 25);
+                                g.DrawRectangle(pen, labelRectangle);
+
+                                g.DrawString(string.Format("{0}/{1}", userView.Name, userView.GroupName), heitiFont, brush, new PointF(labelRectangle.Left + 5, labelRectangle.Top + 5));
+                            }
+                            break;
                         }
                         faceEncodings[i].Dispose();
                     }
