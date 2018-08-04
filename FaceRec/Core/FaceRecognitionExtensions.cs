@@ -21,90 +21,16 @@ namespace FaceRec.Core
             return DlibDotNet.Extensions.BitmapExtensions.ToArray2D<T>(bitmap);
         }
 
-        //public static ValueTuple<Bitmap, int, int, double> Recognize(this FaceRecognition recognitor, Mat image)
-        //{
-        //    var config = ProgramContext.Current.Config;
-        //    var start = DateTime.Now;
-        //    double fx = 0;
-        //    double fy = 0;
-        //    fx = config.ImageSampleSize.Width / (double)image.Width;
-        //    fy = config.ImageSampleSize.Height / (double)image.Height;
-        //    using (var newImage = Resize(image, fx, fy))
-        //    {
-        //        var bitmap = OpenCvSharp.Extensions.BitmapConverter.ToBitmap(newImage);
-        //        using (var img = newImage.ToArray2D<RgbPixel>())
-        //        {
-        //            var detectRectangles = InnerDetect(recognitor, img, bitmap);
-        //            var recoginizeRectangles = InnerRecognize(recognitor, img, detectRectangles);
-
-        //            var duration = (DateTime.Now - start).TotalSeconds;
-        //            return (bitmap, detectRectangles.Length, recoginizeRectangles.Length, duration);
-        //        }
-        //    }
-        //}
-
-        public static ValueTuple<Bitmap, int, int, double> Recognize(this FaceRecognition recognitor, Mat image)
+        public static ValueTuple<Bitmap, int, int, double> Recognize(this FaceRecognition recognitor, Array2D<RgbPixel> img)
         {
             var start = DateTime.Now;
-            var (bitmap, img, detectRectangles) = recognitor.Detect(image);
-            var recoginizeRectangles = InnerRecognize(recognitor, img, bitmap, detectRectangles);
-            img.Dispose();
-            var duration = (DateTime.Now - start).TotalSeconds;
-            return (bitmap, detectRectangles.Length, recoginizeRectangles.Length, duration);
-        }
-
-        private static ValueTuple<Bitmap, Array2D<RgbPixel>, FaceLandmarkDetail[]> GetFaceLandmarkDetails(this FaceRecognition recognitor, Mat image)
-        {
-            var (bitmap, img, detectRectangles) = recognitor.Detect(image);
-            var faceLandmarks = recognitor.FaceLandmarks(img, detectRectangles);
-            var details = new List<FaceLandmarkDetail>();
-            foreach (var faceLandmark in faceLandmarks)
-            {
-                details.Add(FaceLandmarkDetail.From(faceLandmark));
-            }
-
-            return (bitmap, img, details.ToArray());
-        }
-
-        private static ValueTuple<Bitmap, Array2D<RgbPixel>, DlibDotNet.Rectangle[]> Detect(this FaceRecognition recognitor, Mat image)
-        {
             var config = ProgramContext.Current.Config;
-            var start = DateTime.Now;
-            double fx = 0;
-            double fy = 0;
-            fx = config.ImageSampleSize.Width / (double)image.Width;
-            fy = config.ImageSampleSize.Height / (double)image.Height;
-            using (var newImage = image.Resize(fx, fy))
+            var bitmap = DlibDotNet.Extensions.BitmapExtensions.ToBitmap(img);
+            var recoginizeRectangles = new List<DlibDotNet.Rectangle>();
+            var detectRectangles = recognitor.FaceLocations(img, config.UpSampleTimes, config.EnableGPUAcceleration ? "cnn" : "hog");
+            if (detectRectangles.Length > 0 && config.DrawRectangle)
             {
-                var bitmap = OpenCvSharp.Extensions.BitmapConverter.ToBitmap(newImage);
-                var img = newImage.ToArray2D<RgbPixel>();
-                var rectangles = InnerDetect(recognitor, img, bitmap);
-
-                return (bitmap, img, rectangles);
-            }
-        }
-
-        public static Mat Resize(this Mat image, double fx = 0, double fy = 0)
-        {
-            if (fx != 0 && fy != 0)
-            {
-                var newImage = new Mat();
-                Cv2.Resize(image, newImage, new OpenCvSharp.Size(0, 0), fx, fy);
-                return newImage;
-            }
-            else
-            {
-                return image;
-            }
-        }
-
-        private static DlibDotNet.Rectangle[] InnerDetect(FaceRecognition recognitor, Array2D<RgbPixel> img, Bitmap bitmap, double fx = 0, double fy = 0)
-        {
-            var config = ProgramContext.Current.Config;
-            var rectangles = recognitor.FaceLocations(img, config.UpSampleTimes, config.EnableGPUAcceleration ? "cnn" : "hog");
-            if (rectangles.Length > 0 && config.DrawRectangle)
-            {
-                var rects = rectangles.ToSystemRectangles(fx, fy);
+                var rects = detectRectangles.ToSystemRectangles();
                 using (var g = Graphics.FromImage(bitmap))
                 {
                     using (Pen pen = new Pen(Color.Red))
@@ -112,59 +38,48 @@ namespace FaceRec.Core
                         g.DrawRectangles(pen, rects);
                     }
                 }
-            }
 
-            return rectangles;
-        }
-
-        private static DlibDotNet.Rectangle[] InnerRecognize(FaceRecognition recognitor, Array2D<RgbPixel> img, Bitmap bitmap, DlibDotNet.Rectangle[] rectangles)
-        {
-            var config = ProgramContext.Current.Config;
-            var knownUsers = ProgramContext.Current.KnownUsers;
-            var rects = new List<DlibDotNet.Rectangle>();
-            if (rectangles.Length == 0)
-            {
-                return rects.ToArray();
-            }
-
-            if (config.EnableRealTimeRecoginition)
-            {
-                var faceEncodings = recognitor.FaceEncodings(img, rectangles);
-                for (int i = 0; i < faceEncodings.Length; i++)
+                if (config.EnableRealTimeRecoginition)
                 {
-                    for (int j = 0; j < knownUsers.Length; j++)
+                    var knownUsers = ProgramContext.Current.KnownUsers;
+                    var faceEncodings = recognitor.FaceEncodings(img, detectRectangles);
+                    for (int i = 0; i < faceEncodings.Length; i++)
                     {
-                        var userView = knownUsers[j];
-                        var isKnown = recognitor.FaceCompare(faceEncodings[i], userView.FaceEncoding, 0.5f);
-                        if (isKnown)
+                        for (int j = 0; j < knownUsers.Length; j++)
                         {
-                            rects.Add(rectangles[i]);
-                            using (var g = Graphics.FromImage(bitmap))
-                            { 
-                                using (Pen pen = new Pen(Color.Red))
+                            var userView = knownUsers[j];
+                            var isKnown = recognitor.FaceCompare(faceEncodings[i], userView.FaceEncoding, 0.5f);
+                            if (isKnown)
+                            {
+                                recoginizeRectangles.Add(detectRectangles[i]);
+                                using (var g = Graphics.FromImage(bitmap))
                                 {
-                                    var labelRectangle = new System.Drawing.Rectangle(rectangles[i].Left, rectangles[i].Bottom, (int)rectangles[i].Width, 25);
-                                    g.DrawRectangle(pen, labelRectangle);
-
-                                    using (var brush = new SolidBrush(Color.Red))
+                                    using (Pen pen = new Pen(Color.Red))
                                     {
-                                        g.DrawString(string.Format("{0}/{1}", userView.Name, userView.GroupName), new Font("黑体", 14), brush, new PointF(labelRectangle.Left + 5, labelRectangle.Top + 5));
+                                        var labelRectangle = new System.Drawing.Rectangle(detectRectangles[i].Left, detectRectangles[i].Bottom, (int)detectRectangles[i].Width, 25);
+                                        g.DrawRectangle(pen, labelRectangle);
+
+                                        using (var brush = new SolidBrush(Color.Red))
+                                        {
+                                            g.DrawString(string.Format("{0}/{1}", userView.Name, userView.GroupName), new Font("黑体", 14), brush, new PointF(labelRectangle.Left + 5, labelRectangle.Top + 5));
+                                        }
                                     }
                                 }
-                            }
 
-                            break;
+                                break;
+                            }
                         }
+                        faceEncodings[i].Dispose();
                     }
-                    faceEncodings[i].Dispose();
+                }
+                else
+                {
+
                 }
             }
-            else
-            {
 
-            }
-
-            return rects.ToArray();
+            var duration = (DateTime.Now - start).TotalSeconds;
+            return (bitmap, detectRectangles.Length, recoginizeRectangles.Count, duration);
         }
     }
 }

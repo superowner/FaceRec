@@ -67,12 +67,12 @@ namespace FaceRec.Views
 
                     using (Mat image = new Mat()) // Frame image buffer
                     {
-                        while (this.isRunning)
+                        while (this.isRunning && !this.Disposing)
                         {
                             var start = DateTime.Now;
                             Application.DoEvents();
                             videoCapture.Read(image); // same as cvQueryFrame                            
-                            var (bitmap, detectionCount, recognitionCount, duration) = recognitor.Recognize(image);
+                            var (bitmap, detectionCount, recognitionCount, duration) = recognitor.Recognize(image.ToArray2D<RgbPixel>());
                             string text;
                             if (ProgramContext.Current.Config.EnableRealTimeRecoginition)
                             {
@@ -94,10 +94,6 @@ namespace FaceRec.Views
         private void CameraForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             this.isRunning = false;
-            while (this.runningThread.IsAlive)
-            {
-                Thread.Sleep(50);
-            }
         }
     }
 }

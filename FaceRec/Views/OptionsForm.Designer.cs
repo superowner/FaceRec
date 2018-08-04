@@ -46,8 +46,6 @@
             this.chkEnableGPUAcceleration = new System.Windows.Forms.CheckBox();
             this.label2 = new System.Windows.Forms.Label();
             this.labe4 = new System.Windows.Forms.Label();
-            this.sampleSizeComboBox = new System.Windows.Forms.ComboBox();
-            this.label6 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.radioButton6 = new System.Windows.Forms.RadioButton();
@@ -109,8 +107,6 @@
             this.tabPage1.Controls.Add(this.chkEnableGPUAcceleration);
             this.tabPage1.Controls.Add(this.label2);
             this.tabPage1.Controls.Add(this.labe4);
-            this.tabPage1.Controls.Add(this.sampleSizeComboBox);
-            this.tabPage1.Controls.Add(this.label6);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
@@ -122,7 +118,7 @@
             // checkBox4
             // 
             this.checkBox4.AutoSize = true;
-            this.checkBox4.Location = new System.Drawing.Point(245, 216);
+            this.checkBox4.Location = new System.Drawing.Point(245, 189);
             this.checkBox4.Name = "checkBox4";
             this.checkBox4.Size = new System.Drawing.Size(48, 16);
             this.checkBox4.TabIndex = 46;
@@ -132,7 +128,7 @@
             // checkBox3
             // 
             this.checkBox3.AutoSize = true;
-            this.checkBox3.Location = new System.Drawing.Point(172, 216);
+            this.checkBox3.Location = new System.Drawing.Point(172, 189);
             this.checkBox3.Name = "checkBox3";
             this.checkBox3.Size = new System.Drawing.Size(48, 16);
             this.checkBox3.TabIndex = 45;
@@ -142,7 +138,7 @@
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(26, 259);
+            this.label13.Location = new System.Drawing.Point(26, 232);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(53, 12);
             this.label13.TabIndex = 44;
@@ -154,7 +150,7 @@
             this.chkEnableRealTimeRecoginition.Checked = true;
             this.chkEnableRealTimeRecoginition.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkEnableRealTimeRecoginition.Enabled = false;
-            this.chkEnableRealTimeRecoginition.Location = new System.Drawing.Point(94, 257);
+            this.chkEnableRealTimeRecoginition.Location = new System.Drawing.Point(94, 230);
             this.chkEnableRealTimeRecoginition.Name = "chkEnableRealTimeRecoginition";
             this.chkEnableRealTimeRecoginition.Size = new System.Drawing.Size(15, 14);
             this.chkEnableRealTimeRecoginition.TabIndex = 43;
@@ -162,7 +158,7 @@
             // 
             // numericUpSampleTimes
             // 
-            this.numericUpSampleTimes.Location = new System.Drawing.Point(94, 97);
+            this.numericUpSampleTimes.Location = new System.Drawing.Point(94, 70);
             this.numericUpSampleTimes.Maximum = new decimal(new int[] {
             10,
             0,
@@ -175,7 +171,7 @@
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(26, 99);
+            this.label12.Location = new System.Drawing.Point(26, 72);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(53, 12);
             this.label12.TabIndex = 41;
@@ -184,7 +180,7 @@
             // chkDrawRectangle
             // 
             this.chkDrawRectangle.AutoSize = true;
-            this.chkDrawRectangle.Location = new System.Drawing.Point(97, 57);
+            this.chkDrawRectangle.Location = new System.Drawing.Point(97, 30);
             this.chkDrawRectangle.Name = "chkDrawRectangle";
             this.chkDrawRectangle.Size = new System.Drawing.Size(15, 14);
             this.chkDrawRectangle.TabIndex = 40;
@@ -198,7 +194,7 @@
             0,
             0,
             131072});
-            this.numericTolerance.Location = new System.Drawing.Point(94, 137);
+            this.numericTolerance.Location = new System.Drawing.Point(94, 110);
             this.numericTolerance.Maximum = new decimal(new int[] {
             1,
             0,
@@ -216,7 +212,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(26, 139);
+            this.label1.Location = new System.Drawing.Point(26, 112);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(53, 12);
             this.label1.TabIndex = 32;
@@ -226,7 +222,7 @@
             // 
             this.chkEnableCloudDetection.AutoSize = true;
             this.chkEnableCloudDetection.Enabled = false;
-            this.chkEnableCloudDetection.Location = new System.Drawing.Point(94, 299);
+            this.chkEnableCloudDetection.Location = new System.Drawing.Point(94, 272);
             this.chkEnableCloudDetection.Name = "chkEnableCloudDetection";
             this.chkEnableCloudDetection.Size = new System.Drawing.Size(15, 14);
             this.chkEnableCloudDetection.TabIndex = 39;
@@ -235,7 +231,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(26, 299);
+            this.label4.Location = new System.Drawing.Point(26, 272);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(53, 12);
             this.label4.TabIndex = 38;
@@ -245,7 +241,7 @@
             // 
             this.chkEnableMovementDetection.AutoSize = true;
             this.chkEnableMovementDetection.Enabled = false;
-            this.chkEnableMovementDetection.Location = new System.Drawing.Point(94, 217);
+            this.chkEnableMovementDetection.Location = new System.Drawing.Point(94, 190);
             this.chkEnableMovementDetection.Name = "chkEnableMovementDetection";
             this.chkEnableMovementDetection.Size = new System.Drawing.Size(60, 16);
             this.chkEnableMovementDetection.TabIndex = 37;
@@ -255,7 +251,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(26, 219);
+            this.label3.Location = new System.Drawing.Point(26, 192);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(53, 12);
             this.label3.TabIndex = 36;
@@ -264,7 +260,7 @@
             // chkEnableGPUAcceleration
             // 
             this.chkEnableGPUAcceleration.AutoSize = true;
-            this.chkEnableGPUAcceleration.Location = new System.Drawing.Point(94, 177);
+            this.chkEnableGPUAcceleration.Location = new System.Drawing.Point(94, 150);
             this.chkEnableGPUAcceleration.Name = "chkEnableGPUAcceleration";
             this.chkEnableGPUAcceleration.Size = new System.Drawing.Size(15, 14);
             this.chkEnableGPUAcceleration.TabIndex = 35;
@@ -273,7 +269,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(26, 179);
+            this.label2.Location = new System.Drawing.Point(26, 152);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(47, 12);
             this.label2.TabIndex = 34;
@@ -282,31 +278,11 @@
             // labe4
             // 
             this.labe4.AutoSize = true;
-            this.labe4.Location = new System.Drawing.Point(26, 59);
+            this.labe4.Location = new System.Drawing.Point(26, 32);
             this.labe4.Name = "labe4";
             this.labe4.Size = new System.Drawing.Size(53, 12);
             this.labe4.TabIndex = 30;
             this.labe4.Text = "绘制区域";
-            // 
-            // sampleSizeComboBox
-            // 
-            this.sampleSizeComboBox.DisplayMember = "Name";
-            this.sampleSizeComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.sampleSizeComboBox.FormattingEnabled = true;
-            this.sampleSizeComboBox.Location = new System.Drawing.Point(97, 16);
-            this.sampleSizeComboBox.Name = "sampleSizeComboBox";
-            this.sampleSizeComboBox.Size = new System.Drawing.Size(121, 20);
-            this.sampleSizeComboBox.TabIndex = 29;
-            this.sampleSizeComboBox.ValueMember = "Value";
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(26, 19);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(53, 12);
-            this.label6.TabIndex = 28;
-            this.label6.Text = "基准尺寸";
             // 
             // tabPage2
             // 
@@ -552,8 +528,6 @@
         private System.Windows.Forms.CheckBox chkEnableGPUAcceleration;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label labe4;
-        private System.Windows.Forms.ComboBox sampleSizeComboBox;
-        private System.Windows.Forms.Label label6;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.RadioButton radioButton2;
         private System.Windows.Forms.RadioButton radioButton1;

@@ -1,8 +1,4 @@
-﻿using DlibDotNet;
-using DlibDotNet.Tools;
-using FaceRec.Core;
-using FaceRec.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -14,6 +10,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+
+using DlibDotNet;
+using DlibDotNet.Tools;
+using FaceRec.Core;
+using FaceRec.Models;
 
 namespace FaceRec.Views
 {

@@ -13,8 +13,6 @@ namespace FaceRec.Models
     {
         public const string ConfigFile = "config.json";
 
-        public SampleSize ImageSampleSize { get; set; }
-
         public bool DrawRectangle { get; set; }
 
         public uint UpSampleTimes { get; set; }
@@ -79,7 +77,6 @@ namespace FaceRec.Models
             this.EnableGPUAcceleration = config.EnableGPUAcceleration;
             this.EnableMovementDetection = config.EnableMovementDetection;
             this.EnableRealTimeRecoginition = config.EnableRealTimeRecoginition;
-            this.ImageSampleSize = config.ImageSampleSize;
             this.Tolerance = config.Tolerance;
             this.UpSampleTimes = config.UpSampleTimes;
         }

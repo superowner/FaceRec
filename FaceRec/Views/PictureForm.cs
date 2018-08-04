@@ -29,7 +29,7 @@ namespace FaceRec.Views
         {
             var recognitor = ProgramContext.Current.Recognitor;
             var mainForm = (MainForm)this.MdiParent;
-            using (var image = Cv2.ImRead(this.FileName))
+            using (var image = Dlib.LoadImage<RgbPixel>(this.FileName))
             {
                 var (bitmap, detectionCount, recognitionCount, duration) = recognitor.Recognize(image);
                 string text;

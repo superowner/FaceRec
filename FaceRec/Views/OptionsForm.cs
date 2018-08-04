@@ -23,7 +23,6 @@ namespace FaceRec.Views
         private void setDefaultValues()
         {
             var config = ProgramContext.Current.Config;
-            this.sampleSizeComboBox.SelectedValue = config.ImageSampleSize.Value;
             this.chkDrawRectangle.Checked = config.DrawRectangle;
             this.numericTolerance.Value = (decimal)config.Tolerance;
             this.chkEnableGPUAcceleration.Checked = config.EnableGPUAcceleration;
@@ -36,7 +35,6 @@ namespace FaceRec.Views
         private void btnSave_Click(object sender, EventArgs e)
         {
             var config = new AppConfig();
-            config.ImageSampleSize = (SampleSize)this.sampleSizeComboBox.SelectedItem;
             config.DrawRectangle = this.chkDrawRectangle.Checked;
             config.Tolerance = (double)this.numericTolerance.Value;
             config.EnableGPUAcceleration = this.chkEnableGPUAcceleration.Checked;
@@ -65,8 +63,6 @@ namespace FaceRec.Views
 
         private void OptionsForm_Load(object sender, EventArgs e)
         {
-            this.sampleSizeComboBox.DataSource = SampleSize.AllSizes;
-
             this.setDefaultValues();
         }
     }
