@@ -36,7 +36,7 @@ namespace FaceRec.Views
         {
             var config = new AppConfig();
             config.DrawRectangle = this.chkDrawRectangle.Checked;
-            config.Tolerance = (double)this.numericTolerance.Value;
+            config.Tolerance = (float)this.numericTolerance.Value;
             config.EnableGPUAcceleration = this.chkEnableGPUAcceleration.Checked;
             config.EnableMovementDetection = this.chkEnableMovementDetection.Checked;
             config.EnableCloudDetection = this.chkEnableCloudDetection.Checked;

@@ -17,7 +17,7 @@ namespace FaceRec.Models
 
         public uint UpSampleTimes { get; set; }
 
-        public double Tolerance { get; set; }
+        public float Tolerance { get; set; }
 
         public bool EnableGPUAcceleration { get; set; }
 
@@ -37,7 +37,7 @@ namespace FaceRec.Models
                     {
                         var content = sr.ReadToEnd();
 
-                        return JsonConvert.DeserializeObject<AppConfig>(content, new SampleSizeJsonConverter());
+                        return JsonConvert.DeserializeObject<AppConfig>(content);
 
                     }
                 }

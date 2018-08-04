@@ -14,6 +14,9 @@ namespace FaceRec.Core
 {
     public static class FaceRecognitionExtensions
     {
+        public const string HOG = "hog";
+        public const string CNN = "cnn";
+
         public static Array2D<T> ToArray2D<T>(this Mat image)
             where T : struct
         {
@@ -27,7 +30,7 @@ namespace FaceRec.Core
             var config = ProgramContext.Current.Config;
             var bitmap = DlibDotNet.Extensions.BitmapExtensions.ToBitmap(img);
             var recoginizeRectangles = new List<DlibDotNet.Rectangle>();
-            var detectRectangles = recognitor.FaceLocations(img, config.UpSampleTimes, config.EnableGPUAcceleration ? "cnn" : "hog");
+            var detectRectangles = recognitor.FaceLocations(img, config.UpSampleTimes, config.EnableGPUAcceleration ? CNN : HOG);
             if (detectRectangles.Length > 0 && config.DrawRectangle)
             {
                 var rects = detectRectangles.ToSystemRectangles();
@@ -48,7 +51,7 @@ namespace FaceRec.Core
                         for (int j = 0; j < knownUsers.Length; j++)
                         {
                             var userView = knownUsers[j];
-                            var isKnown = recognitor.FaceCompare(faceEncodings[i], userView.FaceEncoding, 0.5f);
+                            var isKnown = recognitor.FaceCompare(faceEncodings[i], userView.FaceEncoding, config.Tolerance);
                             if (isKnown)
                             {
                                 recoginizeRectangles.Add(detectRectangles[i]);

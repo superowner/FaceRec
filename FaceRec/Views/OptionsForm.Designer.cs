@@ -180,6 +180,8 @@
             // chkDrawRectangle
             // 
             this.chkDrawRectangle.AutoSize = true;
+            this.chkDrawRectangle.Checked = true;
+            this.chkDrawRectangle.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkDrawRectangle.Location = new System.Drawing.Point(97, 30);
             this.chkDrawRectangle.Name = "chkDrawRectangle";
             this.chkDrawRectangle.Size = new System.Drawing.Size(15, 14);

@@ -150,8 +150,6 @@
     </Compile>
     <Compile Include="Models\AppConfig.cs" />
     <Compile Include="Models\FaceLandmarkDetail.cs" />
-    <Compile Include="Models\SampleSize.cs" />
-    <Compile Include="Models\SampleSizeJsonConverter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Core\RectangleExtensions.cs" />
